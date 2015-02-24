@@ -1,0 +1,56 @@
+<!doctype html>
+<html class="no-js" lang="">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>State Filter</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" href="css/normalize.css">
+        <link rel="stylesheet" href="css/main.css">
+        <script src="js/vendor/modernizr-2.8.3.min.js"></script>
+    </head>
+    <body ng-app="app">
+        <!--[if lt IE 8]>
+            <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+
+        <!-- Add your site or application content here -->
+        <!-- TABLE HEADER & FILTER TEXT BOX -->
+        <div id="page-header">
+            <div id="table-title">
+                <h1>States</h1>
+            </div>
+            <div>
+                <input type="text" placeholder="Filter" id="filter">
+            </div>
+        </div>
+
+             <div id="state-feed" ng-controller="AppCtrl">
+                <table>
+                    <tr>
+                        <th ng-click="onNameClick()">Name</th>
+                        <th ng-click="onAbbrevClick()">Abbreviation</th>
+                        <th>Link</th>
+                    </tr>
+                    <tr ng-repeat="state in stateList">
+                        <td>{{ state.name }}</td>
+                        <td>{{ state.abbreviation }}</td>
+                        <td><a ng-href="https://en.wikipedia.org/wiki/{{ state.name }}">Link</a></td>
+                    </tr> 
+                </table>
+
+                <div ng-hide="error">
+                    {{ error }}
+                </div>
+            </div>
+
+        <script type="text/javascript" src="bower_components/jquery/dist/jquery.js"></script>
+        <script type="text/javascript" src="bower_components/lodash/lodash.min.js"></script>
+        <script type="text/javascript" src="bower_components/angular/angular.min.js"></script>
+        <script type="text/javascript" src="scripts/app.js"></script>
+        <script type="text/javascript" src="scripts/controllers.js"></script>
+        <script type="text/javascript" src="scripts/services.js"></script>
+
+    </body>
+</html>
