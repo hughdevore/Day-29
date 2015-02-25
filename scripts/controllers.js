@@ -2,56 +2,53 @@ angular.module('app.controller',['app.services'])
 .controller('AppCtrl', function($scope, $http) {
 
 	$scope.filter = '';
-	$scope.stateList = [];
+
 	$scope.displayError = true;
 	$scope.stateTable = true;
-	$scope.filterValue = $('#filter');
-	$scope.AlphaStateList = [];
 	$scope.name = true;
-	$scope.abbreviation = true;
+	$scope.upArrow = true;
+	$scope.downArrow = true;
 
-	// Making a get request to the server
+	$scope.stateList = [];
+	$scope.changedStateList = [];
+
+	// Making a get request to the server and sorting the initial response
 	var promise = $http.get('https://tiny-pizza-server.herokuapp.com/collections/fancy-table')
 	.success(function(response) {
 	// Successfully received a response from the server
-		$scope.stateList = response;
-
+		$scope.stateList = _.sortBy(response, function(element){
+			return element.name;
+		});
+		$scope.changedStateList = $scope.stateList
 	})
 
 	.error(function(err) {
 	// Got an error back from the server
 		$scope.displayError = false;
 		$scope.error = err;
+
 	})
 
-	$scope.onNameClick = function() {
+	$scope.onClick = function() {
 		if($scope.name) {
-			$scope.AlphaStateList = _.sortBy($scope.stateList, function(element){
-				return element.name;
-				});
+			$scope.changedStateList = $scope.changedStateList.reverse();
 			$scope.name = false;
-			$scope.stateList = $scope.AlphaStateList;
+			$scope.upArrow = false;
+			$scope.downArrow = false;
 		} else {
-			$scope.stateList = $scope.AlphaStateList.reverse();
+			$scope.changedStateList = $scope.changedStateList.reverse();
 			$scope.name = true;
+			$scope.upArrow = true;
+			$scope.downArrow = true;
 		}
 	}
 
-	$scope.onAbbrevClick = function() {
-		if($scope.name) {
-			$scope.AlphaStateList = _.sortBy($scope.stateList, function(element){
-				return element.abbreviation;
-				});
-			$scope.stateList = $scope.AlphaStateList;
-			$scope.abbreviation = false;
-		} else {
-			$scope.stateList = $scope.AlphaStateList.reverse();
-			$scope.abbreviation = true;
-		}
-	}
-
-	$scope.onFilter = function() {
-		$scope.filterValue.$watch();
-	}
+	$scope.$watch('filter', function() {
+		$scope.changedStateList = _.filter($scope.stateList, function(element){
+			var name = element.name.toLowerCase().indexOf($scope.filter.toLowerCase());
+			var abbreviation = element.abbreviation.toLowerCase().indexOf($scope.filter.toLowerCase());
+			return name >= 0 || abbreviation >= 0;
+		});
+	});
 
 });
